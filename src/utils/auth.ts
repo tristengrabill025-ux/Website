@@ -5,9 +5,10 @@ export interface AuthUser {
   email: string;
   name: string;
   accessToken: string;
+  role?: string;
 }
 
-// Sign up a new admin user
+// Sign up a new user
 export async function signUp(email: string, password: string, name: string): Promise<AuthUser> {
   try {
     const response = await fetch(
@@ -33,6 +34,7 @@ export async function signUp(email: string, password: string, name: string): Pro
       email: data.user.email,
       name: data.user.user_metadata?.name || name,
       accessToken: data.access_token,
+      role: data.user.user_metadata?.role || undefined,
     };
   } catch (error) {
     console.error("Sign up error:", error);
@@ -40,7 +42,7 @@ export async function signUp(email: string, password: string, name: string): Pro
   }
 }
 
-// Sign in an existing admin user
+// Sign in an existing user
 export async function signIn(email: string, password: string): Promise<AuthUser> {
   try {
     const response = await fetch(
@@ -66,6 +68,7 @@ export async function signIn(email: string, password: string): Promise<AuthUser>
       email: data.user.email,
       name: data.user.user_metadata?.name || email,
       accessToken: data.access_token,
+      role: data.user.user_metadata?.role || undefined,
     };
   } catch (error) {
     console.error("Sign in error:", error);
@@ -96,6 +99,7 @@ export async function getSession(): Promise<AuthUser | null> {
       email: data.user.email,
       name: data.user.user_metadata?.name || data.user.email,
       accessToken: data.access_token,
+      role: data.user.user_metadata?.role || undefined,
     };
   } catch (error) {
     console.error("Get session error:", error);
